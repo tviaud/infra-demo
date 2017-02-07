@@ -2,7 +2,7 @@ CGO_ENABLED=0
 GOOS=linux
 GOARCH=amd64
 TAG=${1:-latest}
-REPO=ehazlett/docker-demo
+REPO=iadvize/infra-demo
 MEDIA_SRCS=$(shell find ui/ -type f \
 	-not -path "ui/semantic/dist/*" \
 	-not -path "ui/node_modules/*")
@@ -16,7 +16,7 @@ deps:
 	@go get -d ./...
 
 build:
-	@go build -a -tags 'netgo' -ldflags '-w -linkmode external -extldflags -static' .
+	@go build -a .
 
 dev-setup:
 	@echo "This could take a while..."
@@ -25,6 +25,7 @@ dev-setup:
 	@cd ui/node_modules/semantic-ui && gulp install
 
 media-semantic: static/dist/.bundle_timestamp
+
 static/dist/.bundle_timestamp: $(MEDIA_SRCS)
 	@cp -f ui/semantic.theme.config ui/semantic/src/theme.config
 	@mkdir -p ui/semantic/src/themes/app && cp -rf ui/semantic.theme/* ui/semantic/src/themes/app/
@@ -37,10 +38,10 @@ static/dist/.bundle_timestamp: $(MEDIA_SRCS)
 	@touch static/dist/.bundle_timestamp
 
 image: build
-	@docker build -t $(REPO):$(TAG) .
+	@docker build -t ${REPO}:${TAG} .
 
 clean:
-	@rm -rf docker-demo
+	@rm -rf infra-demo
 	@rm -rf static/dist/.bundle_timestamp
 
 .PHONY: build deps clean image

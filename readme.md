@@ -15,4 +15,4 @@ This is a Go demo application used for demonstrating Docker and load balancing.
 
 ## Run
 
-`docker run -P --rm docker-demo`
+`docker run -P --rm infra-demo`
